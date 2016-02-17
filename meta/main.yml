@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: Marcelo Correia
+  description: 
+  company:
+  license: MIT
+  min_ansible_version: 1.9
+  platforms:
+  - name: Ubuntu
+    versions:
+      - trusty
+  categories:
+    - system
+    - web
+  dependencies: []
+
+

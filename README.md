@@ -1,39 +1,93 @@
-Role Name
+marcelocorreia.tomcat-multi
 =========
 
-A brief description of the role goes here.
+Configure multiple instances of Apache Tomcat
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+JDK 7+
+tomcat7+ installed via default apt-get 
+tomcat7+ installed via default apt-get 
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```yml
+java_home: /usr/lib/jvm/java-8-oracle
+tomcat_instances:
+- name: auat-mock
+  hostname: da-ci.auat-mock.int.products.bulletproof.net
+  port: 18080
+  maint_port: 18085
+  Xmx: 512
 
-Dependencies
-------------
+- name: auat
+  hostname: da-ci.auat.int.products.bulletproof.net
+  port: 28080
+  maint_port: 28085
+  Xmx: 512
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- name: uat
+  hostname: da-ci.uat.int.products.bulletproof.net
+  port: 38080
+  maint_port: 38085
+  Xmx: 512
+
+- name: demo
+  hostname: da-ci.demo.int.products.bulletproof.net
+  port: 48080
+  maint_port: 48085
+  Xmx: 512
+  
+```
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```yml
+---
+- name: Install Base stuff
+  hosts:
+    - all
+  sudo: yes
+  pre_tasks:
+    - name: Sets up hostname
+      hostname: name="{{ inventory_hostname }}"
+      sudo: yes
+    - name: update apt repositories
+      apt: update_cache=yes
+  roles:
+    - marcelocorreia.apt
+    - ANXS.oracle-jdk
+  tags:
+    - apt
+    - base
+  vars_files:
+    - variables.yml
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+- name: Configure tomcat
+  hosts:
+    - all
+  roles:
+    - ./roles/tomcat-multi
+  tags:
+    - tomcat
+  vars_files:
+    - variables.yml
+
+```
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
-# tomcat-multi
+Some useful stuff at:
+- [https://github.com/marcelocorreia](https://github.com/marcelocorreia)
+- [https://galaxy.ansible.com/list#/users/15516](https://galaxy.ansible.com/list#/users/15516)
+- [https://hub.docker.com/u/marcelocorreia/](https://hub.docker.com/u/marcelocorreia/)
+- Any issues, pull-request are welcome

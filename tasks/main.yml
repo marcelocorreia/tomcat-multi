@@ -1,0 +1,86 @@
+---
+# tasks file for tomcat-multi
+- name: Remove tomcat from update-rc.d
+  shell: "update-rc.d -f tomcat remove; "
+  sudo: yes
+
+- name: Create instances home
+  shell: "cd /opt/; tomcat7-instance-create -p {{ item.port }} -c {{ item.maint_port }} {{ item.name }};"
+  sudo: yes
+  ignore_errors: true
+  with_items:
+    - "{{ tomcat.instances }}"
+
+- name: Replicate config
+  shell: "cp -Rv /etc/tomcat7/policy.d/ /opt/{{ item.name }}/conf/"
+  sudo: yes
+  ignore_errors: true
+  with_items:
+    - "{{ tomcat.instances }}"
+
+- name: Creates static VHost folder
+  file:
+   path="/opt/{{ item.name }}/www"
+   state=directory
+  sudo: yes
+  with_items:
+    - "{{ tomcat.instances }}"
+
+- name: Creates hello world index
+  copy:
+   src="../templates/www/"
+   dest="/opt/{{ item.name }}/www"
+  sudo: yes
+  with_items:
+    - "{{ tomcat.instances }}"
+
+
+- name: Change permissions
+  file:
+    path="/opt/{{ item.name }}"
+    owner="tomcat{{ tomcat.version }}"
+    group="tomcat{{ tomcat.version }}"
+    state=directory
+    recurse=yes
+    force=yes
+  sudo: yes
+  with_items:
+    - "{{ tomcat.instances }}"
+
+- name: Add init scripts
+  template:
+    src="../templates/tomcat-init.d.j2"
+    dest="/etc/init.d/{{ item.name }}"
+    mode=0755
+  sudo: yes
+  with_items:
+    - "{{ tomcat.instances }}"
+
+- name: Add to update-rc.d defaults 90
+  shell: "update-rc.d {{ item.name }} defaults 90"
+  sudo: yes
+  with_items:
+    - "{{ tomcat.instances }}"
+
+- name: Updates NGNIX
+  template:
+    src="../templates/nginx-tomcat.j2"
+    dest="/etc/nginx/sites-available/{{ item.name }}"
+    mode=0755
+  sudo: yes
+  with_items:
+    - "{{ tomcat.instances }}"
+
+- name: Enable VHost
+  file:
+    src="/etc/nginx/sites-available/{{ item.name }}"
+    dest="/etc/nginx/sites-enabled/{{ item.name }}"
+    state=link
+    force=yes
+  sudo: yes
+  with_items:
+    - "{{ tomcat.instances }}"
+
+
+
+

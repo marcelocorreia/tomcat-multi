@@ -1,0 +1,6 @@
+---
+# defaults file for tomcat-multi
+tomcat:
+  version: "{{ tomcat_version | default('7') }}"
+  instances: "{{ tomcat_instances }}"
+
