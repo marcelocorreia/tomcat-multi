@@ -6,9 +6,9 @@ Configure multiple instances of Apache Tomcat
 Requirements
 ------------
 
-JDK 7+
-tomcat7+ installed via default apt-get 
-tomcat7+ installed via default apt-get 
+- JDK 7+
+- tomcat7+ installed via default apt-get 
+- tomcat7+ installed via default apt-get 
 
 Not really a dependency, as long as the requirements above are met, but you can use following roles to make life easier:
 
