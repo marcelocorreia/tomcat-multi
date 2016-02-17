@@ -10,36 +10,36 @@ JDK 7+
 tomcat7+ installed via default apt-get 
 tomcat7+ installed via default apt-get 
 
+Not really a dependency, as long as the requirements above are met, but you can use following roles to make life easier:
+
+- [https://galaxy.ansible.com/marcelocorreia/apt/](marcelo.correia.apt)
+- [https://galaxy.ansible.com/ANXS/oracle-jdk/](ANXS.oracle-jdk)
+
+
 Role Variables
 --------------
 
 ```yml
 java_home: /usr/lib/jvm/java-8-oracle
 tomcat_instances:
-- name: auat-mock
-  hostname: da-ci.auat-mock.int.products.bulletproof.net
+- name: tardis
+  hostname: tardis.local
   port: 18080
   maint_port: 18085
-  Xmx: 512
+  Xmx: 512M
 
-- name: auat
-  hostname: da-ci.auat.int.products.bulletproof.net
+- name: dalek
+  hostname: dalek.skaro
   port: 28080
   maint_port: 28085
-  Xmx: 512
+  Xmx: 512M
 
-- name: uat
-  hostname: da-ci.uat.int.products.bulletproof.net
+- name: hey-ho-lets-go
+  hostname: hey-go.lets.go
   port: 38080
   maint_port: 38085
-  Xmx: 512
-
-- name: demo
-  hostname: da-ci.demo.int.products.bulletproof.net
-  port: 48080
-  maint_port: 48085
-  Xmx: 512
-  
+  Xmx: 512M
+ 
 ```
 
 Example Playbook
