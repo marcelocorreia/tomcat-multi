@@ -2,7 +2,7 @@
 galaxy_info:
   author: Marcelo Correia
   description: "Setup of multiple Tomcat instances per box"
-  company:
+  company: correia.io
   license: MIT
   min_ansible_version: 1.9
   platforms:
@@ -12,6 +12,6 @@ galaxy_info:
   categories:
     - system
     - web
-  dependencies: []
+dependencies: []
 
 
